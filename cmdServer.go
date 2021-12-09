@@ -30,6 +30,7 @@ func cmdHandler(w http.ResponseWriter, r *http.Request) {
 				log.Printf("%s shellStr: %s\n", shellStr, err.Error())
 			}
 			log.Printf("shellStr "+shellStr+": %s\n", out)
+			fmt.Fprintf(w, "%s", out)
 		} else {
 			log.Println("shellStr is nil")
 		}
