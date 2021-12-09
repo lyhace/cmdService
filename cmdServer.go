@@ -15,30 +15,30 @@ func main() {
 }
 
 func cmdHandler(w http.ResponseWriter, r *http.Request) {
+	resultStr := "Only support Post"
 	if r.Method == "POST" {
 		b, err := ioutil.ReadAll(r.Body)
 		checkErrs(err)
 		defer r.Body.Close()
 
 		shellStr := string(b)
-
 		if len(shellStr) > 0 && strings.HasPrefix(shellStr, "fs_cli") {
 			cmd := exec.Command("sh", "-c", shellStr)
 			//cmd := exec.Command(key)
 			out, err := cmd.CombinedOutput()
+			resultStr = string(out)
 			if err != nil {
 				log.Printf("%s shellStr: %s\n", shellStr, err.Error())
+			} else {
+				log.Print("shellStr:", shellStr)
 			}
-			log.Printf("shellStr "+shellStr+": %s\n", out)
-			fmt.Fprintf(w, "%s", out)
-		} else {
-			log.Println("shellStr is nil")
-		}
 
-	} else {
-		log.Println("Only support Post")
-		fmt.Fprintf(w, "Only support post")
+		} else {
+			resultStr = "shellStr is nil"
+		}
 	}
+	log.Println(resultStr)
+	fmt.Fprintf(w, resultStr)
 
 }
 
